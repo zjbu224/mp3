@@ -281,3 +281,4 @@ public class Nodes implements Saveable {
 		jenkins.trimLabels();
 	}
 }
+
