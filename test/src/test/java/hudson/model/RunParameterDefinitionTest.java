@@ -108,11 +108,7 @@ public class RunParameterDefinitionTest {
         assertEquals(Integer.toString(project.getLastBuild().getNumber()),
                      build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
     }
-
-    
-    @Test
-    public void testALLFilter() throws Exception {
-
+    private FreeStyleProject[] combinedtests(RunParameterFilter type) throws Exception {
         FreeStyleProject project = j.createFreeStyleProject("project");
         FreeStyleBuild successfulBuild = project.scheduleBuild2(0).get();
 
@@ -133,11 +129,17 @@ public class RunParameterDefinitionTest {
                 new ParametersDefinitionProperty(new RunParameterDefinition("RUN", 
                                                                              project.getName(),
                                                                              "run description",
-                                                                             RunParameterFilter.ALL));
+                                                                             type));
         paramProject.addProperty(pdp);
+        FreeStyleProject[] results = {project, paramProject};
+        return results;
+    }
 
-        FreeStyleBuild build = paramProject.scheduleBuild2(0).get();
-        assertEquals(Integer.toString(project.getLastBuild().getNumber()),
+    @Test
+    public void testALLFilter() throws Exception {
+        FreeStyleProject[] ret = combinedtests(RunParameterFilter.ALL);
+        FreeStyleBuild build = ret[1].scheduleBuild2(0).get();
+        assertEquals(Integer.toString(ret[0].getLastBuild().getNumber()),
                      build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
     }
 
@@ -203,7 +205,6 @@ public class RunParameterDefinitionTest {
                      build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
     }
     
-    
     @Test
     public void testSTABLEFilter() throws Exception {
 
@@ -234,7 +235,6 @@ public class RunParameterDefinitionTest {
         assertEquals(Integer.toString(successfulBuild.getNumber()),
                      build.getEnvironment(new LogTaskListener(LOGGER, Level.INFO)).get("RUN_NUMBER"));
     }
-    
     
     @Test
     public void testLoadEnvironmentVariablesWhenRunParameterJobHasBeenDeleted() throws Exception {
