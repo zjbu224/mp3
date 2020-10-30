@@ -1,0 +1,4 @@
+1. duplicated code. we can fix by extracting the code into its own method.
+2. feature envy. we should just move it to a class that fits it better.
+3. code like that should be inside a for loop.
+4. the majority of code in RunParameterDefinitionTest.java was repeated with a different parameter being used. we can extract the repeated code to a different function and use that as reference.
